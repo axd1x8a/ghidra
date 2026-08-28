@@ -189,6 +189,7 @@ class FunctionDefinitionDB extends DataTypeDB implements FunctionDefinition {
 		}
 		lock.acquire();
 		boolean isResolveCacheOwner = dataMgr.activateResolveCache();
+		boolean isEquivalenceCacheOwner = dataMgr.activateEquivalenceCache();
 		try {
 			checkDeleted();
 			doReplaceWith(functionDefinition, true);
@@ -199,6 +200,9 @@ class FunctionDefinitionDB extends DataTypeDB implements FunctionDefinition {
 		finally {
 			if (isResolveCacheOwner) {
 				dataMgr.processResolveQueue(true);
+			}
+			if (isEquivalenceCacheOwner) {
+				dataMgr.clearEquivalenceCache();
 			}
 			lock.release();
 		}

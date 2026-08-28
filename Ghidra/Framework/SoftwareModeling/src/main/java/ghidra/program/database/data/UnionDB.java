@@ -304,6 +304,7 @@ class UnionDB extends CompositeDB implements UnionInternal {
 		}
 		lock.acquire();
 		boolean isResolveCacheOwner = dataMgr.activateResolveCache();
+		boolean isEquivalenceCacheOwner = dataMgr.activateEquivalenceCache();
 		try {
 			checkDeleted();
 			doReplaceWith((UnionInternal) dataType, true);
@@ -317,6 +318,9 @@ class UnionDB extends CompositeDB implements UnionInternal {
 		finally {
 			if (isResolveCacheOwner) {
 				dataMgr.processResolveQueue(true);
+			}
+			if (isEquivalenceCacheOwner) {
+				dataMgr.clearEquivalenceCache();
 			}
 			lock.release();
 		}

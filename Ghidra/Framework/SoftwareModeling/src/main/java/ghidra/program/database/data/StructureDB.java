@@ -1679,6 +1679,7 @@ class StructureDB extends CompositeDB implements StructureInternal {
 		}
 		lock.acquire();
 		boolean isResolveCacheOwner = dataMgr.activateResolveCache();
+		boolean isEquivalenceCacheOwner = dataMgr.activateEquivalenceCache();
 		try {
 			checkDeleted();
 			doReplaceWith((StructureInternal) dataType, true);
@@ -1692,6 +1693,9 @@ class StructureDB extends CompositeDB implements StructureInternal {
 		finally {
 			if (isResolveCacheOwner) {
 				dataMgr.processResolveQueue(true);
+			}
+			if (isEquivalenceCacheOwner) {
+				dataMgr.clearEquivalenceCache();
 			}
 			lock.release();
 		}
